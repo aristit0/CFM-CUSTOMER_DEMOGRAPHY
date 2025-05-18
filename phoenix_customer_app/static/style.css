@@ -1,0 +1,55 @@
+:root[data-theme="light"] {
+  --bg: #f4f4f4;
+  --fg: #222;
+  --card: #fff;
+  --accent: #0077ff;
+}
+
+:root[data-theme="dark"] {
+  --bg: #121212;
+  --fg: #eee;
+  --card: #1e1e1e;
+  --accent: #00c3ff;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.container {
+  width: 100%;
+  max-width: 600px;
+}
+
+input, button {
+  padding: 10px;
+  margin-top: 10px;
+  width: 100%;
+  font-size: 1em;
+}
+
+button {
+  background-color: var(--accent);
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+
+.card {
+  background: var(--card);
+  padding: 1rem;
+  margin-top: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 0 10px #ccc;
+}
+
+.card.error {
+  background: #ffdddd;
+  color: #900;
+}
