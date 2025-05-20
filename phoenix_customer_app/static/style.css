@@ -1,20 +1,28 @@
 :root[data-theme="light"] {
-  --bg: #f4f4f4;
-  --fg: #222;
-  --card: #fff;
-  --accent: #0077ff;
+  --bg: #f7f9fc;
+  --fg: #111;
+  --card: #ffffff;
+  --accent: #0061f2;
+  --muted: #6c757d;
+  --input-bg: #fff;
+  --input-border: #ccc;
+  --shadow: rgba(0, 0, 0, 0.08);
 }
 
 :root[data-theme="dark"] {
-  --bg: #121212;
-  --fg: #eee;
-  --card: #1e1e1e;
-  --accent: #00c3ff;
+  --bg: #181a1b;
+  --fg: #f1f1f1;
+  --card: #242526;
+  --accent: #00bcd4;
+  --muted: #999;
+  --input-bg: #2f2f2f;
+  --input-border: #444;
+  --shadow: rgba(255, 255, 255, 0.05);
 }
 
 body {
   margin: 0;
-  font-family: 'Segoe UI', sans-serif;
+  font-family: 'Segoe UI', 'Roboto', sans-serif;
   background: var(--bg);
   color: var(--fg);
   display: flex;
@@ -24,32 +32,111 @@ body {
 
 .container {
   width: 100%;
-  max-width: 600px;
+  max-width: 720px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
-input, button {
-  padding: 10px;
-  margin-top: 10px;
-  width: 100%;
-  font-size: 1em;
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
 }
 
-button {
-  background-color: var(--accent);
+h1 {
+  font-size: 1.8rem;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.theme-toggle button {
+  background: transparent;
   border: none;
-  color: white;
+  font-size: 1.2rem;
+  color: var(--fg);
+  margin-left: 8px;
   cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.theme-toggle button:hover {
+  color: var(--accent);
+}
+
+.lookup-form {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+input[type="text"] {
+  padding: 10px 14px;
+  font-size: 1rem;
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  border-radius: 6px;
+  color: var(--fg);
+  flex: 1 1 auto;
+  min-width: 200px;
+}
+
+button[type="submit"] {
+  background-color: var(--accent);
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  font-size: 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: background 0.2s ease;
+  height: 42px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+button[type="submit"]:hover {
+  background-color: #004bbd;
 }
 
 .card {
   background: var(--card);
-  padding: 1rem;
-  margin-top: 1rem;
-  border-radius: 8px;
-  box-shadow: 0 0 10px #ccc;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px var(--shadow);
+}
+
+.card + .card {
+  margin-top: 1.5rem;
+}
+
+.card h2 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.25rem;
+  margin: 0 0 0.8rem 0;
+  color: var(--accent);
+}
+
+.card p {
+  margin: 0.3rem 0;
+  line-height: 1.5;
+}
+
+.card strong {
+  font-weight: 600;
 }
 
 .card.error {
-  background: #ffdddd;
-  color: #900;
+  background-color: #ffe2e2;
+  color: #a10000;
+  border-left: 4px solid #ff5c5c;
 }

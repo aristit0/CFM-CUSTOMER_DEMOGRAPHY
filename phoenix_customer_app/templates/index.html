@@ -1,52 +1,70 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
-  <meta charset="UTF-8">
-  <title>Customer Lookup</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Customer Demography Lookup</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 </head>
 <body>
   <div class="container">
-    <h1>🔍 Customer Demography Lookup</h1>
-    <form method="POST">
-      <input type="text" name="cif" placeholder="Enter CIF..." required />
-      <button type="submit">Search</button>
-    </form>
+    <header class="app-header">
+      <h1><i class="fas fa-users"></i> Customer Demography Lookup</h1>
+      <div class="theme-toggle">
+        <button onclick="setTheme('light')" title="Light Mode"><i class="fas fa-sun"></i></button>
+        <button onclick="setTheme('dark')" title="Dark Mode"><i class="fas fa-moon"></i></button>
+      </div>
+    </header>
 
-    {% if data %}
-      {% if data.error %}
-        <div class="card error">
-          <strong>Error:</strong> {{ data.error }}
-        </div>
-      {% else %}
-        <div class="card">
-          <h2>Customer Info</h2>
-          <p><strong>Name:</strong> {{ data.NAME }}</p>
-          <p><strong>Birth Date:</strong> {{ data.BIRTH_DATE }}</p>
-          <p><strong>City:</strong> {{ data.CITY }}</p>
-        </div>
-        <div class="card">
-          <h2>Bank Product</h2>
-          <p><strong>Type:</strong> {{ data.PRODUCT_TYPE }}</p>
-          <p><strong>Status:</strong> {{ data.STATUS }}</p>
-        </div>
-        <div class="card">
-          <h2>Asset</h2>
-          <p><strong>Type:</strong> {{ data.ASSET_TYPE }}</p>
-          <p><strong>Value:</strong> ${{ data.ASSET_VALUE }}</p>
-        </div>
+    <main>
+      <form method="POST" class="lookup-form">
+        <input type="text" name="cif" placeholder="Enter Customer CIF" required />
+        <button type="submit"><i class="fas fa-search"></i> Search</button>
+      </form>
+
+      {% if data %}
+        {% if data.error %}
+          <div class="card error">
+            <strong><i class="fas fa-exclamation-triangle"></i> Error:</strong> {{ data.error }}
+          </div>
+        {% else %}
+          <section class="card">
+            <h2><i class="fas fa-id-card"></i> Customer Info</h2>
+            <div class="info-grid">
+              <p><strong>Name:</strong> {{ data.NAME }}</p>
+              <p><strong>Birth Date:</strong> {{ data.BIRTHDATE }}</p>
+              <p><strong>Gender:</strong> {{ data.GENDER }}</p>
+              <p><strong>City:</strong> {{ data.CITY }}</p>
+            </div>
+          </section>
+
+          <section class="card">
+            <h2><i class="fas fa-wallet"></i> Bank Product</h2>
+            <div class="info-grid">
+              <p><strong>Type:</strong> {{ data.PRODUCTTYPE }}</p>
+              <p><strong>Status:</strong> {{ data.STATUS }}</p>
+              <p><strong>Open Date:</strong> {{ data.OPENDATE }}</p>
+            </div>
+          </section>
+
+          <section class="card">
+            <h2><i class="fas fa-chart-line"></i> Asset</h2>
+            <div class="info-grid">
+              <p><strong>Type:</strong> {{ data.ASSETTYPE }}</p>
+              <p><strong>Value:</strong> ${{ data.ASSETVALUE }}</p>
+              <p><strong>Valuation Date:</strong> {{ data.VALUATION_DATE }}</p>
+            </div>
+          </section>
+        {% endif %}
       {% endif %}
-    {% endif %}
+    </main>
   </div>
 
   <script>
-    document.addEventListener("keydown", e => {
-      if (e.key === "d" && e.altKey) {
-        document.documentElement.setAttribute("data-theme", "dark");
-      } else if (e.key === "l" && e.altKey) {
-        document.documentElement.setAttribute("data-theme", "light");
-      }
-    });
+    function setTheme(mode) {
+      document.documentElement.setAttribute("data-theme", mode);
+    }
   </script>
 </body>
 </html>

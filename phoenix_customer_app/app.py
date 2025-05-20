@@ -1,14 +1,40 @@
+import os
 from flask import Flask, request, render_template
 import phoenixdb
 import phoenixdb.cursor
+from datetime import datetime
 
-app = Flask(__name__)
+# Explicit absolute path to your project directory
+BASE_DIR = "/home/cdsw/phoenix-flask-app"
 
-# Phoenix Query Server URL (adjust to your env)
-database_url = 'jdbc:phoenix:thin:url=https://cdpw1.cloudeka.ai:8765/default;serialization=PROTOBUF;authentication=SPNEGO;principal=cmluser@CLOUDEKA.AI;keytab=/home/nifi/cml2.keytab'
-conn = phoenixdb.connect(database_url, autocommit=True)
+# Create Flask app with correct template/static folder references
+app = Flask(
+    __name__,
+    template_folder=os.path.join(BASE_DIR, "templates"),
+    static_folder=os.path.join(BASE_DIR, "static")
+)
+
+# Phoenix Query Server via Knox Gateway
+database_url = 'https://cdpm1.cloudeka.ai:8443/gateway/cdp-proxy-api/avatica'
+
+# Connect to PhoenixDB using BASIC auth
+conn = phoenixdb.connect(
+    database_url,
+    autocommit=True,
+    authentication='BASIC',
+    avatica_user='cmluser',
+    avatica_password='hwj5GpM8rVgy'
+)
 cursor = conn.cursor()
 
+# Format milliseconds to readable dates
+def format_timestamp(ts):
+    try:
+        return datetime.fromtimestamp(int(ts) / 1000).strftime("%Y-%m-%d")
+    except:
+        return ts
+
+# Root route: render the form and show results
 @app.route("/", methods=["GET", "POST"])
 def index():
     data = None
@@ -20,11 +46,16 @@ def index():
             if result:
                 colnames = [desc[0] for desc in cursor.description]
                 data = dict(zip(colnames, result))
+                for field in ["BIRTHDATE", "OPENDATE", "VALUATION_DATE"]:
+                    if field in data and data[field]:
+                        data[field] = format_timestamp(data[field])
+            else:
+                data = {"error": f"No record found for CIF {cif}"}
         except Exception as e:
             data = {"error": str(e)}
     return render_template("index.html", data=data)
 
+
+# Start the app in CML environment
 if __name__ == "__main__":
-    app.run(debug=True)
-
-
+    app.run(host="127.0.0.1", port=int(os.environ["CDSW_APP_PORT"]))
