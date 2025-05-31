@@ -9,6 +9,7 @@
 </head>
 <body>
   <div class="container">
+    <!-- Header with title and theme toggle -->
     <header class="app-header">
       <h1><i class="fas fa-users"></i> Customer Demography Lookup</h1>
       <div class="theme-toggle">
@@ -17,9 +18,10 @@
       </div>
     </header>
 
+    <!-- Main form and result display -->
     <main>
       <form method="POST" class="lookup-form">
-        <input type="text" name="cif" placeholder="Enter Customer CIF" required />
+        <input type="text" name="cif" placeholder="Enter Customer CIF" required autofocus />
         <button type="submit"><i class="fas fa-search"></i> Search</button>
       </form>
 
@@ -64,7 +66,14 @@
   <script>
     function setTheme(mode) {
       document.documentElement.setAttribute("data-theme", mode);
+      localStorage.setItem("theme", mode);
     }
+
+    // Restore theme preference on load
+    window.addEventListener("DOMContentLoaded", () => {
+      const saved = localStorage.getItem("theme");
+      if (saved) setTheme(saved);
+    });
   </script>
 </body>
 </html>
