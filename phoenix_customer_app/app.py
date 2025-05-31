@@ -15,17 +15,20 @@ app = Flask(
 )
 
 # Phoenix Query Server via Knox Gateway
-database_url = 'https://cdpm1.cloudeka.ai:8443/gateway/cdp-proxy-api/avatica'
+DATABASE_URL = 'https://cdpm1.cloudeka.ai:8443/gateway/cdp-proxy-api/avatica'
+PHOENIX_USER = 'cmluser'
+PHOENIX_PASSWORD = 'hwj5GpM8rVgy'
 
-# Connect to PhoenixDB using BASIC auth
-conn = phoenixdb.connect(
-    database_url,
-    autocommit=True,
-    authentication='BASIC',
-    avatica_user='cmluser',
-    avatica_password='hwj5GpM8rVgy'
-)
-cursor = conn.cursor()
+# Utility function to create a new connection + cursor
+def get_cursor():
+    conn = phoenixdb.connect(
+        DATABASE_URL,
+        autocommit=True,
+        authentication='BASIC',
+        avatica_user=PHOENIX_USER,
+        avatica_password=PHOENIX_PASSWORD
+    )
+    return conn.cursor()
 
 # Format milliseconds to readable dates
 def format_timestamp(ts):
@@ -41,6 +44,7 @@ def index():
     if request.method == "POST":
         cif = request.form.get("cif")
         try:
+            cursor = get_cursor()
             cursor.execute("SELECT * FROM CUSTOMER.CUSTOMER_DEMOGRAPHY WHERE CIF = ?", (int(cif),))
             result = cursor.fetchone()
             if result:
@@ -54,7 +58,6 @@ def index():
         except Exception as e:
             data = {"error": str(e)}
     return render_template("index.html", data=data)
-
 
 # Start the app in CML environment
 if __name__ == "__main__":
